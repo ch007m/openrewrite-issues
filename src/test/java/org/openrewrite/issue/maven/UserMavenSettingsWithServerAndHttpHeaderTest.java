@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
      |    \--- com.fasterxml.jackson.core:jackson-databind:2.17.2
 
  */
-
 public class UserMavenSettingsTest {
 
 	private final MavenExecutionContextView ctx = MavenExecutionContextView
@@ -35,31 +34,31 @@ public class UserMavenSettingsTest {
 	void serverHttpHeaders() throws IOException {
 		var settingsXml = """
 <settings>
-<servers>
-    <server>
-        <id>maven-snapshots</id>
-        <configuration>
-            <httpHeaders>
-                <property>
-                    <name>X-JFrog-Art-Api</name>
-                    <value>myApiToken</value>
-                </property>
-            </httpHeaders>
-        </configuration>
-    </server>
-</servers>
-<profiles>
-    <profile>
-        <id>my-profile</id>
-        <repositories>
-            <repository>
-                <id>maven-snapshots</id>
-                <name>Private Repo</name>
-                <url>https://repo.company.net/maven</url>
-            </repository>
-        </repositories>
-    </profile>
-</profiles>
+    <servers>
+        <server>
+            <id>maven-snapshots</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>X-JFrog-Art-Api</name>
+                        <value>myApiToken</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <id>my-profile</id>
+            <repositories>
+                <repository>
+                    <id>maven-snapshots</id>
+                    <name>Private Repo</name>
+                    <url>https://repo.company.net/maven</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </settings>""";
 
         XmlMapper xmlMapper = new XmlMapper();
