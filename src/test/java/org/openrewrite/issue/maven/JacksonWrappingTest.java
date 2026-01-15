@@ -1,16 +1,14 @@
-package org.openrewrite.issue;
+package org.openrewrite.issue.maven;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.openrewrite.quarkus.maven.model.MavenSettings;
+import org.openrewrite.maven.model.MavenSettings;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JacksonWrappingTest {
 
-	@Disabled
 	@Test
 	public void toJson() throws JsonProcessingException {
 		String xmlsettings = """

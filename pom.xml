@@ -130,7 +130,7 @@
                     <groupId>com.fasterxml.jackson.module</groupId>
                     <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
                 </dependency>
-                <!-- Needed to fix
+                <!-- Needed the dependency to fix the ClassNotFound error
                 java.lang.NoClassDefFoundError: javax/xml/bind/annotation/XmlElement
                 at com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector.<init>(JaxbAnnotationIntrospector.java:137)
                 at com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector.<init>(JaxbAnnotationIntrospector.java:124)

@@ -1,19 +1,14 @@
-package org.openrewrite.issue;
+package org.openrewrite.issue.maven;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Parser;
 import org.openrewrite.maven.MavenExecutionContextView;
-import org.openrewrite.maven.internal.MavenXmlMapper;
-import org.openrewrite.quarkus.maven.model.Interpolator;
-import org.openrewrite.quarkus.maven.model.MavenSettings;
+import org.openrewrite.maven.model.Interpolator;
+import org.openrewrite.maven.model.MavenSettings;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
  */
 
-public class UserMavenSettingsTest {
+public class UserRewriteMavenSettingsTest {
 
 	private final MavenExecutionContextView ctx = MavenExecutionContextView
 			.view(new InMemoryExecutionContext((ThrowingConsumer<Throwable>) input -> {
@@ -45,32 +40,45 @@ public class UserMavenSettingsTest {
 				// language=xml
 				"""
 <settings>
-<servers>
-    <server>
-        <id>maven-snapshots</id>
-        <configuration>
-            <httpHeaders>
-                <property>
-                    <name>X-JFrog-Art-Api</name>
-                    <value>myApiToken</value>
-                </property>
-            </httpHeaders>
-        </configuration>
-    </server>
-</servers>
-<profiles>
-    <profile>
-        <id>my-profile</id>
-        <repositories>
-            <repository>
-                <id>maven-snapshots</id>
-                <name>Private Repo</name>
-                <url>https://repo.company.net/maven</url>
-            </repository>
-        </repositories>
-    </profile>
-</profiles>
-</settings>""");
+    <servers>
+        <server>
+            <id>maven-snapshots</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>X-JFrog-Art-Api</name>
+                        <value>myApiToken</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <id>my-profile</id>
+            <repositories>
+                <repository>
+                    <id>maven-snapshots</id>
+                    <name>Private Repo</name>
+                    <url>https://repo.company.net/maven</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</settings>
+        """);
+
+        /* To inspect the code
+        ObjectMapper mapper = new XmlMapper();
+        JavaType type = mapper.getTypeFactory().constructType(MavenSettings.HttpHeader.class);
+        BeanDescription desc = mapper.getSerializationConfig().introspect(type);
+
+        desc.findProperties().forEach(p -> {
+            System.out.println("Property: " + p.getName());
+            System.out.println(" -> Has Constructor Parameter: " + p.hasConstructorParameter());
+            System.out.println(" -> Has Field: " + p.hasField());
+        });
+        */
 
         XmlMapper xmlMapper = new XmlMapper();
         MavenSettings settings = new Interpolator().interpolate(xmlMapper.readValue(settingsXmlfile.getSource(ctx), MavenSettings.class));
@@ -83,10 +91,4 @@ public class UserMavenSettingsTest {
 
         assertThat(server.getConfiguration().getHttpHeaders().getFirst().getName()).isEqualTo("X-JFrog-Art-Api");
 	}
-
-    public MavenSettings build(MavenSettings mavenSettings) {
-        return new MavenSettings(mavenSettings.localRepository, mavenSettings.profiles,
-            mavenSettings.activeProfiles, mavenSettings.mirrors,
-            mavenSettings.servers);
-    }
 }
