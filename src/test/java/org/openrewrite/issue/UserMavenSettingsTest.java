@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
      [INFO] +- com.fasterxml.jackson.core:jackson-core:jar:2.19.2:compile
      [INFO] +- com.fasterxml.jackson.core:jackson-databind:jar:2.19.2:compile
 
-   Version of the rewrite-maven module
+   Version of jackson without the issue
      +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8 -> 2.17.2
      |    +--- com.fasterxml.jackson.core:jackson-core:2.17.2
-     |    \--- com.fasterxml.jackson.core:jackson-databind:2.17.2 (*)
+     |    \--- com.fasterxml.jackson.core:jackson-databind:2.17.2
 
  */
 
