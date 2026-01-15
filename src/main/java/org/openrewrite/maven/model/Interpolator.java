@@ -1,4 +1,4 @@
-package org.openrewrite.quarkus.maven.model;
+package org.openrewrite.maven.model;
 
 import org.jspecify.annotations.Nullable;
 import org.openrewrite.internal.ListUtils;

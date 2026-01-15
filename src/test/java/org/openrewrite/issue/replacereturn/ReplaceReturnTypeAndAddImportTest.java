@@ -1,4 +1,4 @@
-package org.openrewrite.issue;
+package org.openrewrite.issue.replacereturn;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

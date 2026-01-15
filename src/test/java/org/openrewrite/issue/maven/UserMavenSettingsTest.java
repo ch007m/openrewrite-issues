@@ -1,16 +1,14 @@
-package org.openrewrite.issue;
+package org.openrewrite.issue.maven;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.InMemoryExecutionContext;
-import org.openrewrite.Parser;
 import org.openrewrite.maven.MavenExecutionContextView;
-import org.openrewrite.quarkus.maven.model.MavenSettings;
+import org.openrewrite.maven.model.MavenSettings;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
  */
 
-public class UserRewriteMavenSettingsTest {
+public class UserMavenSettingsTest {
 
 	private final MavenExecutionContextView ctx = MavenExecutionContextView
 			.view(new InMemoryExecutionContext((ThrowingConsumer<Throwable>) input -> {
@@ -35,9 +33,7 @@ public class UserRewriteMavenSettingsTest {
 
 	@Test
 	void serverHttpHeaders() throws IOException {
-		var settingsXmlfile = Parser.Input.fromString(Path.of("settings.xml"),
-				// language=xml
-				"""
+		var settingsXml = """
 <settings>
 <servers>
     <server>
@@ -64,22 +60,10 @@ public class UserRewriteMavenSettingsTest {
         </repositories>
     </profile>
 </profiles>
-</settings>""");
-
-        /* To inspect the code
-        ObjectMapper mapper = new XmlMapper();
-        JavaType type = mapper.getTypeFactory().constructType(MavenSettings.HttpHeader.class);
-        BeanDescription desc = mapper.getSerializationConfig().introspect(type);
-
-        desc.findProperties().forEach(p -> {
-            System.out.println("Property: " + p.getName());
-            System.out.println(" -> Has Constructor Parameter: " + p.hasConstructorParameter());
-            System.out.println(" -> Has Field: " + p.hasField());
-        });
-        */
+</settings>""";
 
         XmlMapper xmlMapper = new XmlMapper();
-        MavenSettings settings = xmlMapper.readValue(settingsXmlfile.getSource(ctx), MavenSettings.class);
+        MavenSettings settings = xmlMapper.readValue(settingsXml, MavenSettings.class);
 
 		MavenSettings.Server server = settings.getServers().getServers().getFirst();
         System.out.println("Configuration: " + server.getConfiguration());
