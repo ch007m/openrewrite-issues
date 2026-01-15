@@ -23,12 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
      |    \--- com.fasterxml.jackson.core:jackson-databind:2.17.2
 
  */
-public class UserMavenSettingsTest {
-
-	private final MavenExecutionContextView ctx = MavenExecutionContextView
-			.view(new InMemoryExecutionContext((ThrowingConsumer<Throwable>) input -> {
-				throw input;
-			}));
+public class UserMavenSettingsWithServerAndHttpHeaderTest {
 
 	@Test
 	void serverHttpHeaders() throws IOException {
