@@ -1,6 +1,7 @@
 package org.openrewrite.issue;
 
 import org.assertj.core.api.ThrowingConsumer;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.InMemoryExecutionContext;
@@ -72,6 +73,9 @@ public class UserMavenSettingsTest {
 				.interpolate(MavenXmlMapper.readMapper().readValue(settingsXML.getSource(ctx), MavenSettings.class));
 
 		MavenSettings.Server server = settings.getServers().getServers().getFirst();
-		assertThat(server.getConfiguration().getHttpHeaders().getFirst().getName()).isEqualTo("X-JFrog-Art-Api");
+        System.out.println("Configuration: " + server.getConfiguration());
+        Assertions.assertNotNull(server.getConfiguration().getHttpHeaders());
+        System.out.println("HttpHeaders: " + server.getConfiguration().getHttpHeaders());
+        assertThat(server.getConfiguration().getHttpHeaders().getFirst().getName()).isEqualTo("X-JFrog-Art-Api");
 	}
 }
