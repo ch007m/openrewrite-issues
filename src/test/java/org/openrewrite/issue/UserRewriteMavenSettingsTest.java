@@ -1,18 +1,12 @@
 package org.openrewrite.issue;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Parser;
 import org.openrewrite.maven.MavenExecutionContextView;
-import org.openrewrite.maven.internal.MavenXmlMapper;
-import org.openrewrite.quarkus.maven.model.Interpolator;
 import org.openrewrite.quarkus.maven.model.MavenSettings;
 
 import java.io.IOException;
@@ -32,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
  */
 
-public class UserMavenSettingsTest {
+public class UserRewriteMavenSettingsTest {
 
 	private final MavenExecutionContextView ctx = MavenExecutionContextView
 			.view(new InMemoryExecutionContext((ThrowingConsumer<Throwable>) input -> {
@@ -72,8 +66,20 @@ public class UserMavenSettingsTest {
 </profiles>
 </settings>""");
 
+        /* To inspect the code
+        ObjectMapper mapper = new XmlMapper();
+        JavaType type = mapper.getTypeFactory().constructType(MavenSettings.HttpHeader.class);
+        BeanDescription desc = mapper.getSerializationConfig().introspect(type);
+
+        desc.findProperties().forEach(p -> {
+            System.out.println("Property: " + p.getName());
+            System.out.println(" -> Has Constructor Parameter: " + p.hasConstructorParameter());
+            System.out.println(" -> Has Field: " + p.hasField());
+        });
+        */
+
         XmlMapper xmlMapper = new XmlMapper();
-        MavenSettings settings = new Interpolator().interpolate(xmlMapper.readValue(settingsXmlfile.getSource(ctx), MavenSettings.class));
+        MavenSettings settings = xmlMapper.readValue(settingsXmlfile.getSource(ctx), MavenSettings.class);
 
 		MavenSettings.Server server = settings.getServers().getServers().getFirst();
         System.out.println("Configuration: " + server.getConfiguration());
@@ -83,10 +89,4 @@ public class UserMavenSettingsTest {
 
         assertThat(server.getConfiguration().getHttpHeaders().getFirst().getName()).isEqualTo("X-JFrog-Art-Api");
 	}
-
-    public MavenSettings build(MavenSettings mavenSettings) {
-        return new MavenSettings(mavenSettings.localRepository, mavenSettings.profiles,
-            mavenSettings.activeProfiles, mavenSettings.mirrors,
-            mavenSettings.servers);
-    }
 }
