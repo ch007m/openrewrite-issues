@@ -99,7 +99,7 @@
         <profile>
             <id>jackson-1</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <dependencyManagement>
                 <dependencies>
@@ -163,6 +163,9 @@
         </profile>
         <profile>
             <id>jackson-2</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <dependencyManagement>
                 <dependencies>
                     <dependency>
