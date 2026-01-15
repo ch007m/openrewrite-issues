@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.Parser;
 import org.openrewrite.maven.MavenExecutionContextView;
+import org.openrewrite.maven.model.Interpolator;
 import org.openrewrite.maven.model.MavenSettings;
 
 import java.io.IOException;
@@ -39,32 +40,33 @@ public class UserRewriteMavenSettingsTest {
 				// language=xml
 				"""
 <settings>
-<servers>
-    <server>
-        <id>maven-snapshots</id>
-        <configuration>
-            <httpHeaders>
-                <property>
-                    <name>X-JFrog-Art-Api</name>
-                    <value>myApiToken</value>
-                </property>
-            </httpHeaders>
-        </configuration>
-    </server>
-</servers>
-<profiles>
-    <profile>
-        <id>my-profile</id>
-        <repositories>
-            <repository>
-                <id>maven-snapshots</id>
-                <name>Private Repo</name>
-                <url>https://repo.company.net/maven</url>
-            </repository>
-        </repositories>
-    </profile>
-</profiles>
-</settings>""");
+    <servers>
+        <server>
+            <id>maven-snapshots</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>X-JFrog-Art-Api</name>
+                        <value>myApiToken</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <id>my-profile</id>
+            <repositories>
+                <repository>
+                    <id>maven-snapshots</id>
+                    <name>Private Repo</name>
+                    <url>https://repo.company.net/maven</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</settings>
+        """);
 
         /* To inspect the code
         ObjectMapper mapper = new XmlMapper();
@@ -79,7 +81,7 @@ public class UserRewriteMavenSettingsTest {
         */
 
         XmlMapper xmlMapper = new XmlMapper();
-        MavenSettings settings = xmlMapper.readValue(settingsXmlfile.getSource(ctx), MavenSettings.class);
+        MavenSettings settings = new Interpolator().interpolate(xmlMapper.readValue(settingsXmlfile.getSource(ctx), MavenSettings.class));
 
 		MavenSettings.Server server = settings.getServers().getServers().getFirst();
         System.out.println("Configuration: " + server.getConfiguration());
