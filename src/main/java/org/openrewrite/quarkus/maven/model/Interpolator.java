@@ -58,8 +58,7 @@ public class Interpolator {
 	}
 
 	public MavenSettings.HttpHeader interpolate(MavenSettings.HttpHeader httpHeader) {
-		return new MavenSettings.HttpHeader(interpolate(httpHeader.getName()), interpolate(httpHeader.getValue()),
-				interpolate(httpHeader.getProperty()));
+		return new MavenSettings.HttpHeader(interpolate(httpHeader.getName()), interpolate(httpHeader.getValue()));
 	}
 
 	public MavenSettings.Server interpolate(MavenSettings.Server server) {
