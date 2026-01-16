@@ -1,4 +1,4 @@
-package org.openrewrite.maven.model;
+package org.openrewrite.maven.internal;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +18,7 @@ import static java.util.Collections.emptyList;
 public class RawRepositories {
     @JacksonXmlProperty(localName = "repository")
     @JacksonXmlElementWrapper(useWrapping = false)
-    List<RawRepositories.Repository> repositories = emptyList();
+    List<Repository> repositories = emptyList();
 
     @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
     @Data
@@ -26,22 +26,24 @@ public class RawRepositories {
         @Nullable
         String id;
 
-        @Nullable
+        @With
         String name;
 
         @With
         String url;
 
-        RawRepositories.ArtifactPolicy releases;
+        @Nullable
+        ArtifactPolicy releases;
 
-        RawRepositories.ArtifactPolicy snapshots;
+        @Nullable
+        ArtifactPolicy snapshots;
 
         @JsonCreator
         public Repository(@JsonProperty("id") @Nullable String id,
-                         @JsonProperty("name") @Nullable String name,
-                         @JsonProperty("url") String url,
-                         @JsonProperty("releases") RawRepositories.ArtifactPolicy releases,
-                         @JsonProperty("snapshots") RawRepositories.ArtifactPolicy snapshots) {
+                          @JsonProperty("name") @Nullable String name,
+                          @JsonProperty("url") String url,
+                          @JsonProperty("releases") RawRepositories.ArtifactPolicy releases,
+                          @JsonProperty("snapshots") RawRepositories.ArtifactPolicy snapshots) {
             this.id = id;
             this.name = name;
             this.url = url;
